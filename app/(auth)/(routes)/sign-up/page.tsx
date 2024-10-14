@@ -17,12 +17,9 @@ import { Input } from '@/components/ui/input';
 import Link from 'next/link';
 import { Loader2 } from 'lucide-react';
 import { useState } from 'react';
+import { signUpSchema } from '@/schemas/signUpSchema';
 
 // Define the sign-up schema
-export const signUpSchema = z.object({
-    email: z.string().email().nonempty('Email is required'),
-    password: z.string().min(6, 'Password must be at least 6 characters long').nonempty('Password is required'),
-});
 
 export default function SignUpForm() {
     const router = useRouter();
