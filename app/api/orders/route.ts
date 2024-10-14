@@ -3,13 +3,13 @@ import prismadb from '@/lib/prismadb';
 import { getServerSession } from 'next-auth/next';
 import { NextResponse } from 'next/server';
 
-export async function GET(request: Request) {
+export async function GET(request: any) {
     try {
         const session = await getServerSession(authOptions);
         const _user = session?.user;
 
         if (!session || !_user) {
-            return new NextResponse("Unauthenticated", { status: 403 });
+            return NextResponse.json({ message: "Unauthenticated" }, { status: 403 });
         }
 
         const existingOrders = await prismadb.order.findMany({
@@ -18,15 +18,14 @@ export async function GET(request: Request) {
                 storeId: process.env.STORE_ID
             }
         });
-        console.log("existingOrders", existingOrders)
 
-        return new Response(JSON.stringify({
+        return NextResponse.json({
             success: true,
             orders: existingOrders
-        }), { status: 200 });
+        });
 
     } catch (error) {
         console.error('Error fetching orders:', error);
-        return new Response(JSON.stringify({ success: false, message: 'Error fetching orders' }), { status: 500 });
+        return NextResponse.json({ success: false, message: 'Error fetching orders' }, { status: 500 });
     }
 }
